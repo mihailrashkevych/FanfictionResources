@@ -3,6 +3,7 @@ import { Collapse, Container, Navbar, NavbarBrand, NavbarToggler, NavItem, NavLi
 import { Link } from 'react-router-dom';
 import { LoginMenu } from './api-authorization/LoginMenu';
 import './NavMenu.css';
+import authService from './api-authorization/AuthorizeService'
 
 export class NavMenu extends Component {
   static displayName = NavMenu.name;
@@ -12,8 +13,27 @@ export class NavMenu extends Component {
 
     this.toggleNavbar = this.toggleNavbar.bind(this);
     this.state = {
-      collapsed: true
+      collapsed: true,
+      isAuthenticated: false,
+      role: null
     };
+  }
+
+  componentDidMount() {
+    this._subscription = authService.subscribe(() => this.populateState());
+    this.populateState();
+    console.log(this.state.role);
+  }
+
+  componentWillUnmount() {
+    authService.unsubscribe(this._subscription);
+  }
+  async populateState() {
+    const [isAuthenticated, user] = await Promise.all([authService.isAuthenticated(), authService.getUser()])
+    this.setState({
+      isAuthenticated,
+      role: user && user.role
+    });
   }
 
   toggleNavbar () {
@@ -22,7 +42,8 @@ export class NavMenu extends Component {
     });
   }
 
-  render () {
+  render() {
+    const role = this.state.role;
     return (
       <header>
         <Navbar className="navbar-expand-sm navbar-toggleable-sm ng-white border-bottom box-shadow mb-3" light>
@@ -34,12 +55,14 @@ export class NavMenu extends Component {
                 <NavItem>
                   <NavLink tag={Link} className="text-dark" to="/">Home</NavLink>
                 </NavItem>
-                <NavItem>
-                  <NavLink tag={Link} className="text-dark" to="/counter">Counter</NavLink>
-                </NavItem>
-                <NavItem>
-                  <NavLink tag={Link} className="text-dark" to="/fetch-data">Fetch data</NavLink>
-                </NavItem>
+                {
+                  role && role.includes("Admin") ?
+                    <span>
+                      <NavItem>
+                        <NavLink tag={Link} className="text-dark" to="/admin-page">Users Control</NavLink>
+                      </NavItem>
+                    </span>
+                    : null}
                 <LoginMenu>
                 </LoginMenu>
               </ul>

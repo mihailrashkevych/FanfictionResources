@@ -1,7 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.Extensions.Options;
-using SendGrid;
-using SendGrid.Helpers.Mail;
 using System.Net;
 using System.Net.Mail;
 using System.Threading.Tasks;
@@ -33,7 +31,7 @@ namespace FanfictionResources.Services
                 Credentials = new NetworkCredential(fromMail, fromPassword),
                 EnableSsl = true,
             };
-            smtpClient.Send(message);
+            await smtpClient.SendMailAsync(message);
         }
 
     }
