@@ -22,7 +22,6 @@ export class NavMenu extends Component {
   componentDidMount() {
     this._subscription = authService.subscribe(() => this.populateState());
     this.populateState();
-    console.log(this.state.role);
   }
 
   componentWillUnmount() {
@@ -44,6 +43,7 @@ export class NavMenu extends Component {
 
   render() {
     const role = this.state.role;
+    const isAuthenticated = this.state.isAuthenticated
     return (
       <header>
         <Navbar className="navbar-expand-sm navbar-toggleable-sm ng-white border-bottom box-shadow mb-3" light>
@@ -59,7 +59,15 @@ export class NavMenu extends Component {
                   role && role.includes("Admin") ?
                     <span>
                       <NavItem>
-                        <NavLink tag={Link} className="text-dark" to="/admin-page">Users Control</NavLink>
+                        <NavLink tag={Link} className="text-dark" to="/admin-page">Resource Control</NavLink>
+                      </NavItem>
+                    </span>
+                    : null}
+                {
+                   isAuthenticated ?
+                    <span>
+                      <NavItem>
+                        <NavLink tag={Link} className="text-dark" to="/profile">Profile</NavLink>
                       </NavItem>
                     </span>
                     : null}

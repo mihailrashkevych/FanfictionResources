@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
+using FanfictionResources.Data;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using FanfictionResources.Models;
@@ -24,17 +25,20 @@ namespace FanfictionResources.Areas.Identity.Pages.Account
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
+        private readonly ApplicationDbContext _context;
 
         public RegisterModel(
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
             ILogger<RegisterModel> logger,
-            IEmailSender emailSender)
+            IEmailSender emailSender, 
+            ApplicationDbContext context)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _logger = logger;
             _emailSender = emailSender;
+            _context = context;
         }
 
         [BindProperty]
@@ -80,10 +84,25 @@ namespace FanfictionResources.Areas.Identity.Pages.Account
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             if (ModelState.IsValid)
             {
+                bool isAny = !_userManager.Users.Any();
                 var user = new ApplicationUser { UserName = Input.Email, Email = Input.Email, Name = Input.Name};
                 var result = await _userManager.CreateAsync(user, Input.Password);
+
                 if (result.Succeeded)
                 {
+                    if (isAny)
+                    {
+                        await _userManager.AddToRoleAsync(user, "Admin");
+                        user.Role = Role.Admin;
+                        await _userManager.UpdateAsync(user);
+                    }
+                    else
+                    {
+                        await _userManager.AddToRoleAsync(user, "Member");
+                        user.Role = Role.User;
+                        await _userManager.UpdateAsync(user);
+                    }
+
                     _logger.LogInformation("User created a new account with password.");
 
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);

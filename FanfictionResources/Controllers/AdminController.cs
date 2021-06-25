@@ -13,7 +13,6 @@ namespace FanfictionResources.Controllers
 {
     [ApiController]
     [Authorize(Roles = "Admin")]
-    [Authorize]
     public class AdminController : ControllerBase
     {
         ApplicationDbContext context;
@@ -24,7 +23,7 @@ namespace FanfictionResources.Controllers
             this.context = context;
             this.userManager = userManager;
         }
-
+        
         [Route("[controller]")]
         [HttpGet]
         public async Task<IEnumerable<ApplicationUser>> GetAsync()

@@ -32,7 +32,7 @@ namespace FanfictionResources.Services
                 roleClaims.Add(new Claim(JwtClaimTypes.Role, role));
             }
 
-            context.IssuedClaims.Add(new Claim(JwtClaimTypes.Name, user.UserName));
+            context.IssuedClaims.Add(new Claim(JwtClaimTypes.Id, user.Id));
             context.IssuedClaims.AddRange(roleClaims);
             //Add more claims as you need
         }

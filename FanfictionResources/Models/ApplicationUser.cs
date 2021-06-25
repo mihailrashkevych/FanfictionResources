@@ -9,7 +9,8 @@ namespace FanfictionResources.Models
     public class ApplicationUser : IdentityUser
     {
         public string Name { get; set; }
-        public Role Role { get; set; } = Role.User;
+        public Role Role { get; set; }
+        public List<FunСomposition> FunСompositions { get; set; }
     }
 
     public enum Role

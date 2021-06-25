@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FanfictionResources.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20210618144952_init")]
-    partial class init
+    [Migration("20210624092156_initialMigrate")]
+    partial class initialMigrate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -90,6 +90,101 @@ namespace FanfictionResources.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers");
+                });
+
+            modelBuilder.Entity("FanfictionResources.Models.Chapter", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Body")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("FunСompositionId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("NextId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Pic")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("PreviousId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("FunСompositionId");
+
+                    b.ToTable("Chapters");
+                });
+
+            modelBuilder.Entity("FanfictionResources.Models.Fandom", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Fandoms");
+                });
+
+            modelBuilder.Entity("FanfictionResources.Models.FunСomposition", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("ApplicationUserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("FandomId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ApplicationUserId");
+
+                    b.HasIndex("FandomId");
+
+                    b.ToTable("FunСompositions");
+                });
+
+            modelBuilder.Entity("FanfictionResources.Models.Tag", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int?>("FunСompositionId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Name")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("FunСompositionId");
+
+                    b.ToTable("Tags");
                 });
 
             modelBuilder.Entity("IdentityServer4.EntityFramework.Entities.DeviceFlowCodes", b =>
@@ -273,12 +368,10 @@ namespace FanfictionResources.Migrations
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
                     b.Property<string>("LoginProvider")
-                        .HasMaxLength(128)
-                        .HasColumnType("nvarchar(128)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("ProviderKey")
-                        .HasMaxLength(128)
-                        .HasColumnType("nvarchar(128)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("ProviderDisplayName")
                         .HasColumnType("nvarchar(max)");
@@ -315,12 +408,10 @@ namespace FanfictionResources.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("LoginProvider")
-                        .HasMaxLength(128)
-                        .HasColumnType("nvarchar(128)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Name")
-                        .HasMaxLength(128)
-                        .HasColumnType("nvarchar(128)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Value")
                         .HasColumnType("nvarchar(max)");
@@ -328,6 +419,41 @@ namespace FanfictionResources.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens");
+                });
+
+            modelBuilder.Entity("FanfictionResources.Models.Chapter", b =>
+                {
+                    b.HasOne("FanfictionResources.Models.FunСomposition", "FunСomposition")
+                        .WithMany("Chapters")
+                        .HasForeignKey("FunСompositionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("FunСomposition");
+                });
+
+            modelBuilder.Entity("FanfictionResources.Models.FunСomposition", b =>
+                {
+                    b.HasOne("FanfictionResources.Models.ApplicationUser", "ApplicationUser")
+                        .WithMany("FunСompositions")
+                        .HasForeignKey("ApplicationUserId");
+
+                    b.HasOne("FanfictionResources.Models.Fandom", "Fandom")
+                        .WithMany("FunСompositions")
+                        .HasForeignKey("FandomId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ApplicationUser");
+
+                    b.Navigation("Fandom");
+                });
+
+            modelBuilder.Entity("FanfictionResources.Models.Tag", b =>
+                {
+                    b.HasOne("FanfictionResources.Models.FunСomposition", null)
+                        .WithMany("Tags")
+                        .HasForeignKey("FunСompositionId");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -379,6 +505,23 @@ namespace FanfictionResources.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("FanfictionResources.Models.ApplicationUser", b =>
+                {
+                    b.Navigation("FunСompositions");
+                });
+
+            modelBuilder.Entity("FanfictionResources.Models.Fandom", b =>
+                {
+                    b.Navigation("FunСompositions");
+                });
+
+            modelBuilder.Entity("FanfictionResources.Models.FunСomposition", b =>
+                {
+                    b.Navigation("Chapters");
+
+                    b.Navigation("Tags");
                 });
 #pragma warning restore 612, 618
         }
