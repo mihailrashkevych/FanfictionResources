@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FanfictionResources.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20210624092156_initialMigrate")]
-    partial class initialMigrate
+    [Migration("20210705230550_init")]
+    partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -152,7 +152,7 @@ namespace FanfictionResources.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("FandomId")
+                    b.Property<int?>("FandomId")
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
@@ -174,17 +174,27 @@ namespace FanfictionResources.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("FunСompositionId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Name")
-                        .HasColumnType("int");
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("FunСompositionId");
-
                     b.ToTable("Tags");
+                });
+
+            modelBuilder.Entity("FunСompositionTag", b =>
+                {
+                    b.Property<int>("FunСompositionsId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TagsId")
+                        .HasColumnType("int");
+
+                    b.HasKey("FunСompositionsId", "TagsId");
+
+                    b.HasIndex("TagsId");
+
+                    b.ToTable("FunСompositionTag");
                 });
 
             modelBuilder.Entity("IdentityServer4.EntityFramework.Entities.DeviceFlowCodes", b =>
@@ -440,20 +450,26 @@ namespace FanfictionResources.Migrations
 
                     b.HasOne("FanfictionResources.Models.Fandom", "Fandom")
                         .WithMany("FunСompositions")
-                        .HasForeignKey("FandomId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("FandomId");
 
                     b.Navigation("ApplicationUser");
 
                     b.Navigation("Fandom");
                 });
 
-            modelBuilder.Entity("FanfictionResources.Models.Tag", b =>
+            modelBuilder.Entity("FunСompositionTag", b =>
                 {
                     b.HasOne("FanfictionResources.Models.FunСomposition", null)
-                        .WithMany("Tags")
-                        .HasForeignKey("FunСompositionId");
+                        .WithMany()
+                        .HasForeignKey("FunСompositionsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("FanfictionResources.Models.Tag", null)
+                        .WithMany()
+                        .HasForeignKey("TagsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -520,8 +536,6 @@ namespace FanfictionResources.Migrations
             modelBuilder.Entity("FanfictionResources.Models.FunСomposition", b =>
                 {
                     b.Navigation("Chapters");
-
-                    b.Navigation("Tags");
                 });
 #pragma warning restore 612, 618
         }

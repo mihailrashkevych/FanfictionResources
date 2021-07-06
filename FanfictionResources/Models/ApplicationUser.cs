@@ -10,7 +10,12 @@ namespace FanfictionResources.Models
     {
         public string Name { get; set; }
         public Role Role { get; set; }
-        public List<FunСomposition> FunСompositions { get; set; }
+        public virtual ICollection<FunСomposition> FunСompositions { get; set; }
+
+        public ApplicationUser()
+        {
+            FunСompositions = new List<FunСomposition>();
+        }
     }
 
     public enum Role

@@ -57,6 +57,11 @@ namespace FanfictionResources
             services.AddControllersWithViews();
             services.AddRazorPages();
 
+            services.AddControllersWithViews()
+                .AddNewtonsoftJson(options =>
+                    options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+                );
+
             // In production, the React files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
             {

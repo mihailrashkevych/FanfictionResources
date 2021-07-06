@@ -14,10 +14,12 @@ namespace FanfictionResources.Data
         {
         }
 
+
         public DbSet<FunСomposition> FunСompositions { get; set; }
         public DbSet<Chapter> Chapters { get; set; }
         public DbSet<Tag> Tags { get; set; }
         public DbSet<Fandom> Fandoms { get; set; }
+        //public DbSet<FunCompositionsTags> FunCompositionsTags { get; set; }
 
     }
 }

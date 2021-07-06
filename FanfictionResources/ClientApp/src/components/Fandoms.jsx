@@ -11,6 +11,7 @@ export function Fandoms() {
     const [data, setData] = useState({
         fandoms: [],
     });
+
     const [fandom, setFandom] = useState({
         id: '',
         name: '',

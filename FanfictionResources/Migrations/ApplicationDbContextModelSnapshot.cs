@@ -150,7 +150,7 @@ namespace FanfictionResources.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("FandomId")
+                    b.Property<int?>("FandomId")
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
@@ -448,9 +448,7 @@ namespace FanfictionResources.Migrations
 
                     b.HasOne("FanfictionResources.Models.Fandom", "Fandom")
                         .WithMany("FunСompositions")
-                        .HasForeignKey("FandomId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("FandomId");
 
                     b.Navigation("ApplicationUser");
 

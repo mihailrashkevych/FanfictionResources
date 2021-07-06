@@ -1,9 +1,11 @@
-﻿using System.Composition;
+﻿using System.ComponentModel.DataAnnotations;
+using System.Composition;
 
 namespace FanfictionResources.Models
 {
     public class Chapter
     {
+        [Key]
         public int Id { get; set; }
         public string Name { get; set; }
         public string Pic { get; set; }

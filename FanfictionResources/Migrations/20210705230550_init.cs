@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace FanfictionResources.Migrations
 {
-    public partial class initialMigrate : Migration
+    public partial class init : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -98,6 +98,19 @@ namespace FanfictionResources.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_PersistedGrants", x => x.Key);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Tags",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Tags", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -214,7 +227,7 @@ namespace FanfictionResources.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    FandomId = table.Column<int>(type: "int", nullable: false),
+                    FandomId = table.Column<int>(type: "int", nullable: true),
                     ApplicationUserId = table.Column<string>(type: "nvarchar(450)", nullable: true)
                 },
                 constraints: table =>
@@ -231,7 +244,7 @@ namespace FanfictionResources.Migrations
                         column: x => x.FandomId,
                         principalTable: "Fandoms",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -259,23 +272,27 @@ namespace FanfictionResources.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Tags",
+                name: "FunСompositionTag",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<int>(type: "int", nullable: false),
-                    FunСompositionId = table.Column<int>(type: "int", nullable: true)
+                    FunСompositionsId = table.Column<int>(type: "int", nullable: false),
+                    TagsId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Tags", x => x.Id);
+                    table.PrimaryKey("PK_FunСompositionTag", x => new { x.FunСompositionsId, x.TagsId });
                     table.ForeignKey(
-                        name: "FK_Tags_FunСompositions_FunСompositionId",
-                        column: x => x.FunСompositionId,
+                        name: "FK_FunСompositionTag_FunСompositions_FunСompositionsId",
+                        column: x => x.FunСompositionsId,
                         principalTable: "FunСompositions",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_FunСompositionTag_Tags_TagsId",
+                        column: x => x.TagsId,
+                        principalTable: "Tags",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
@@ -344,6 +361,11 @@ namespace FanfictionResources.Migrations
                 column: "FandomId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_FunСompositionTag_TagsId",
+                table: "FunСompositionTag",
+                column: "TagsId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_PersistedGrants_Expiration",
                 table: "PersistedGrants",
                 column: "Expiration");
@@ -357,11 +379,6 @@ namespace FanfictionResources.Migrations
                 name: "IX_PersistedGrants_SubjectId_SessionId_Type",
                 table: "PersistedGrants",
                 columns: new[] { "SubjectId", "SessionId", "Type" });
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Tags_FunСompositionId",
-                table: "Tags",
-                column: "FunСompositionId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -388,16 +405,19 @@ namespace FanfictionResources.Migrations
                 name: "DeviceCodes");
 
             migrationBuilder.DropTable(
-                name: "PersistedGrants");
+                name: "FunСompositionTag");
 
             migrationBuilder.DropTable(
-                name: "Tags");
+                name: "PersistedGrants");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
                 name: "FunСompositions");
+
+            migrationBuilder.DropTable(
+                name: "Tags");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");

@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore;
 namespace FanfictionResources.Controllers
 {
     [ApiController]
-    [Authorize(Roles = "Admin")]
+    [Authorize]
     public class FandomController : ControllerBase
     {
         ApplicationDbContext context;
@@ -31,6 +31,7 @@ namespace FanfictionResources.Controllers
         }
 
         [Route("[controller]")]
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] Fandom fandom)
         {
@@ -40,6 +41,7 @@ namespace FanfictionResources.Controllers
         }
         
         [Route("[controller]")]
+        [Authorize(Roles = "Admin")]
         [HttpPut]
         public async Task<IActionResult> Update([FromBody] Fandom fandom)
         {
@@ -50,6 +52,7 @@ namespace FanfictionResources.Controllers
         }
 
         [Route("[controller]")]
+        [Authorize(Roles = "Admin")]
         [HttpDelete]
         public async Task<IActionResult> Delete([FromBody] int id)
         {
