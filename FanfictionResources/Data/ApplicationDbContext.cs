@@ -14,12 +14,18 @@ namespace FanfictionResources.Data
         {
         }
 
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<FunCompositionsTags>().HasKey(sc => new { sc.TagsId, sc.FuncompositionsId });
+        }
 
         public DbSet<FunСomposition> FunСompositions { get; set; }
         public DbSet<Chapter> Chapters { get; set; }
         public DbSet<Tag> Tags { get; set; }
         public DbSet<Fandom> Fandoms { get; set; }
-        //public DbSet<FunCompositionsTags> FunCompositionsTags { get; set; }
+        public DbSet<FunCompositionsTags> FunCompositionsTags { get; set; }
 
     }
 }

@@ -3,7 +3,7 @@ import {Table, Button} from 'react-bootstrap'
 import { useTable } from "react-table";
 import authService from './api-authorization/AuthorizeService'
 
-export function ReactTable({ data, handleDelete, handleUpdate }) {
+export function ReactTable({ data, handleDelete, handleUpdateHeaders, handleUpdateBook,handleRead }) {
 
     const columns = React.useMemo(
         () => [
@@ -32,8 +32,14 @@ export function ReactTable({ data, handleDelete, handleUpdate }) {
                 accessor: 'actions',
                 Cell: ({ cell }) => (
                     <>
-                        <Button size='sm' variant="secondary" value={cell.row.values.name} onClick = {handleUpdate}>
-                            Edit
+                        <Button size='sm' variant="secondary" value={cell.row.values.name} onClick = {handleRead}>
+                            Read
+                        </Button>
+                        <Button size='sm' variant="secondary" value={cell.row.values.name} onClick = {handleUpdateBook}>
+                            Edit Book
+                        </Button>
+                        <Button size='sm' variant="secondary" value={cell.row.values.name} onClick = {handleUpdateHeaders}>
+                            Edit Headers
                         </Button>
                         <Button size='sm' variant="secondary" value={cell.row.values.name} onClick = {handleDelete}>
                             Delete
@@ -57,11 +63,7 @@ export function ReactTable({ data, handleDelete, handleUpdate }) {
     });
 
     return (
-        <Table striped bordered hover size="sm"
-            // {...getTableProps()}
-            // border={1}
-            // style={{ borderCollapse: "collapse", width: "100%" }}
-        >
+        <Table striped bordered hover size="sm">
             <thead>
                 {headerGroups.map((group) => (
                     <tr {...group.getHeaderGroupProps()}>

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Redirect } from 'react-router-dom';
 import { Button, ButtonGroup, Input } from 'reactstrap';
 import { Table } from 'reactstrap';
 import authService from './api-authorization/AuthorizeService'
@@ -12,6 +13,9 @@ export function Users() {
     const [data, setData] = useState({
         users: []
     });
+
+    const [profileId, setProfileId] = useState('');
+    const [redirect, setRedirect] = useState(false);
 
     var optionsLastSignDate = {
         year: 'numeric',
@@ -174,6 +178,15 @@ export function Users() {
         setData({ users: users });
     }
 
+    const handleRedirect = (e) => {
+        setProfileId(e.target.value);
+        setRedirect(true);
+    }
+    
+    if (redirect) {
+        return <Redirect to={{ pathname: '/profile', state: { id: profileId } }} />
+    }
+
     return (
         <div className="App">
             <ButtonGroup>
@@ -201,6 +214,7 @@ export function Users() {
                         <th>Email</th>
                         <th>Lockout End</th>
                         <th>Role</th>
+                        <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -215,6 +229,7 @@ export function Users() {
                                     <td>{(!user.role)
                                         ? "User"
                                         : "Admin"}</td>
+                                    <td><Button variant="secondary" size='sm' onClick={handleRedirect} value={user.id}>To Profile</Button></td>
                                 </tr>
                             );
                         })}

@@ -27,12 +27,13 @@ namespace FanfictionResources.Controllers
         }
 
         [Route("[controller]")]
-        [HttpGet]
-        public async Task<IEnumerable<FunСomposition>> GetAsync()
+        [HttpGet("composition/{id}")]
+        public async Task<IEnumerable<FunСomposition>> GetAsync(string id)
         {
             var compositions = await context.FunСompositions
-                .Include(c=>c.Fandom)
+                .Include(f=>f.Fandom)
                 .Include(t=>t.Tags)
+                .Where(x => x.ApplicationUserId == id)
                 .ToListAsync(); 
             return compositions;
         }
@@ -85,23 +86,18 @@ namespace FanfictionResources.Controllers
                 }
             }
 
-            var funComposition = await context.FunСompositions.Where(c => c.Id == composition.Id).FirstOrDefaultAsync();
+            var book = await context.FunСompositions
+                .Include(p => p.Tags)
+                .FirstOrDefaultAsync(x=>x.Id==composition.Id);
+
+            book.Tags.Clear();
+            await context.SaveChangesAsync();
 
 
-            //foreach (var tag in funComposition.Tags)
-            //{
-            //    var book = context.FunСompositions
-            //        .Include(p => p.Tags)
-            //        .First();
-
-            //    var tagToRemove = book.Tags
-            //        .Single(x => x.Id == tag.Id);
-            //    book.Tags.Remove(tagToRemove);
-            //    await context.SaveChangesAsync();
-            //}
-            
-            composition.Tags = tags;
-            context.Update(composition);
+            book.Tags = tags;
+            book.Description = composition.Description;
+            book.Name = composition.Name;
+            book.FandomId = composition.FandomId;
             await context.SaveChangesAsync();
             return Ok();
         }

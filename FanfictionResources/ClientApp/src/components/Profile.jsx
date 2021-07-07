@@ -4,10 +4,10 @@ import { Button, Modal, Form } from 'react-bootstrap'
 import '../custom.css'
 import { ReactTable } from './Table'
 import TagsInput from 'react-tagsinput'
-import {AutocompleteTags} from './AutocompleteTags'
-import {TagRender} from './TagRender'
+import { AutocompleteTags } from './AutocompleteTags'
+import { TagRender } from './TagRender'
 
-export function Profile() {
+export function Profile(props) {
   const [compositions, setCompositions] = useState([]);
   const [fandoms, setFandoms] = useState([]);
   const [compositionTags, setCompositionTags] = useState([]);
@@ -24,10 +24,10 @@ export function Profile() {
       description: '',
     });
 
-  useEffect(() => { 
-    populateCompositions();    
+  useEffect(() => {
+    populateCompositions();
     populateFandomData();
-    populateTags(); 
+    populateTags();
   }, []);
 
   useEffect(() => {
@@ -36,7 +36,6 @@ export function Profile() {
         return obj.name == nameForUpdate;
       })
       setComposition(compositionU);
-      console.log(compositionU)
 
       const result = [];
       compositionU.tags.forEach(tag => {
@@ -44,23 +43,29 @@ export function Profile() {
       });
       setCompositionTags(result);
     }
-
-  }, [nameForUpdate, isUpdate]);
+    populateTags();
+  }, [nameForUpdate, isUpdate, show]);
 
   async function populateCompositions() {
     const token = await authService.getAccessToken();
-    const response = await fetch('composition', {
-      headers: !token ? {} : { 'Authorization': `Bearer ${token}` }
+    let id;
+    if (props.location.state !== undefined) {
+      id = props.location.state.id;
+    } else {
+      const user = await authService.getUser();
+      id =user.id;
+    }
+    const response = await fetch('composition/' + id, {
+      headers: !token ? {} : { 'Authorization': `Bearer ${token}` },
     });
     const data = await response.json();
     setCompositions(data);
-    console.log(data)
   };
 
   async function populateTags() {
     const token = await authService.getAccessToken();
     const response = await fetch('tag', {
-      headers: !token ? {} : { 'Authorization': `Bearer ${token}` }
+      headers: !token ? {} : { 'Authorization': `Bearer ${token}` },
     });
     const data = await response.json();
     setTags(data);
@@ -73,26 +78,17 @@ export function Profile() {
     });
     const data = await response.json();
     setFandoms(data);
-    setComposition({fandomId: data[0].id})
+    setComposition({ fandomId: data[0].id })
   };
 
-  async function updateComposition(dateToUpdate) {
-    const token = await authService.getAccessToken();
-    dateToUpdate = JSON.stringify(dateToUpdate);
-    const response = await fetch('composition', {
-      method: 'PUT',
-      headers: !token ? {} : { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
-      body: dateToUpdate,
-    });
-    await response;
-    populateCompositions();
-  };
-
-  const handleUpdate = (e) => {
+  const handleUpdateHeaders = (e) => {
     setNameForUpdate(e.target.value);
-    console.log(e.target.value)
     setIsUpdate(true);
     setShow(true);
+  }
+
+  const handleDelete = (e) => {
+    deleteComposition(e.target.value);
   }
 
   const onInput = (e) => {
@@ -101,7 +97,6 @@ export function Profile() {
       ...composition,
       [name]: value
     });
-    console.log(composition)
   }
 
   const handleClose = () => {
@@ -110,9 +105,8 @@ export function Profile() {
     setComposition({});
     setIsUpdate(false);
   };
-  
+
   const handleShow = () => {
-    console.log(composition.tags)
     if (isUpdate) {
       setCompositionTags(composition.tags);
       addTags(composition.tags);
@@ -120,18 +114,17 @@ export function Profile() {
     setShow(true);
   }
 
-  const handleTagsSet = (tags) =>{
+  const handleTagsSet = (tags) => {
     setCompositionTags(tags);
     addTags(tags);
   }
 
   async function addTags(tags) {
     const result = [];
-    console.log(tags)
-      tags.forEach(tag => {
-        result.push({name: tag });
-      });
-    setComposition({... composition,tags:result});
+    tags.forEach(tag => {
+      result.push({ name: tag });
+    });
+    setComposition({ ...composition, tags: result });
     return composition.tags;
   }
 
@@ -144,7 +137,6 @@ export function Profile() {
     else {
       createComposition(composition);
     }
-    console.log(composition);
     setShow(false);
     setCompositionTags([]);
     setComposition({});
@@ -165,21 +157,29 @@ export function Profile() {
     await populateCompositions();
   };
 
+  async function updateComposition(dateToUpdate) {
+    const token = await authService.getAccessToken();
+    dateToUpdate = JSON.stringify(dateToUpdate);
+    const response = await fetch('composition', {
+      method: 'PUT',
+      headers: !token ? {} : { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
+      body: dateToUpdate,
+    });
+    await response;
+    await populateCompositions();
+  };
+
   async function deleteComposition(dateToDelete) {
     const token = await authService.getAccessToken();
     dateToDelete = JSON.stringify(dateToDelete);
     const response = await fetch('composition', {
-        method: 'DELETE',
-        headers: !token ? {} : { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
-        body: dateToDelete,
+      method: 'DELETE',
+      headers: !token ? {} : { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
+      body: dateToDelete,
     });
     await response;
     await populateCompositions();
-};
-
-const handleDelete = (e) => {
-    deleteComposition(e.target.value);
-}
+  };
 
   return (
     <div>
@@ -204,9 +204,9 @@ const handleDelete = (e) => {
             <Form.Group role="form">
               <Form.Label>Fandom</Form.Label>
               <Form.Control as="select"
-              name='fandomId'
-              value={composition.fandomId}
-              onChange={onInput}
+                name='fandomId'
+                value={composition.fandomId}
+                onChange={onInput}
               >
                 {
                   fandoms.map(fandom => {
@@ -219,7 +219,7 @@ const handleDelete = (e) => {
             </Form.Group>
             <Form.Group role="form">
               <Form.Label>Tags</Form.Label>
-                <TagsInput onlyUnique='true' inputProps = {tags} renderInput = {AutocompleteTags} renderTag={TagRender} value={compositionTags} onChange={handleTagsSet} addOnBlur='true'/>
+              <TagsInput onlyUnique='true' inputProps={tags} renderInput={AutocompleteTags} renderTag={TagRender} value={compositionTags} onChange={handleTagsSet} addOnBlur='true' />
             </Form.Group>
             <Form.Group role="form">
               <Form.Label>Description</Form.Label>
@@ -234,12 +234,12 @@ const handleDelete = (e) => {
               Close
             </Button>
             <Button variant="primary" type="submit" onClick={onFormSubmit}>
-              Create
+              Save
             </Button>
           </Form>
         </Modal.Body>
       </Modal>
-      <ReactTable data={compositions} handleDelete={handleDelete} handleUpdate={handleUpdate}/>
+      <ReactTable data={compositions} handleDelete={handleDelete} handleUpdate={handleUpdateHeaders} />
     </div>
   );
 }
