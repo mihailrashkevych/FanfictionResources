@@ -1,12 +1,22 @@
 import React from "react";
 import {Table, Button} from 'react-bootstrap'
 import { useTable } from "react-table";
-import authService from './api-authorization/AuthorizeService'
 
-export function ReactTable({ data, handleDelete, handleUpdateHeaders, handleUpdateBook,handleRead }) {
+export function ReactTable({ data, handleDelete, handleUpdateHeaders, handleUpdateBook, handleRead }) {
 
     const columns = React.useMemo(
         () => [
+            {
+                Header: 'Picture',
+                accessor: 'pictureUrl',
+                Cell: ({ cell: { value } }) => {
+                    return (
+                        <div style={{ width: 100 }}>
+                            <img style={{ width: "100%", margin: "30px 0" }} src={value} />
+                        </div>
+                    )
+                },
+            },
             {
                 Header: 'Name',
                 accessor: 'name',

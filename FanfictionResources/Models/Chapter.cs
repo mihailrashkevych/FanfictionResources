@@ -8,10 +8,11 @@ namespace FanfictionResources.Models
         [Key]
         public int Id { get; set; }
         public string Name { get; set; }
-        public string Pic { get; set; }
+        public string PictureUrl { get; set; }
         public string Body { get; set; }
-        public int NextId { get; set; }
-        public int PreviousId { get; set; }
+        public int? NextId { get; set; }
+        public int? PreviousId { get; set; }
+        public int? SwapId { get; set; }
         public int FunСompositionId { get; set; }
         public FunСomposition FunСomposition { get; set; }
     }

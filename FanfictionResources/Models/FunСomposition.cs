@@ -7,12 +7,13 @@ using System.Threading.Tasks;
 
 namespace FanfictionResources.Models
 {
-    public class FunСomposition
+    public class FunСomposition : BaseEntity
     {
         [Key]
         public int Id { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
+        public string PictureUrl { get; set; }
         public int? FandomId { get; set; }
         public Fandom Fandom { get; set; }
         public string ApplicationUserId { get; set; }

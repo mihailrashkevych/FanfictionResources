@@ -1,4 +1,6 @@
-﻿using FanfictionResources.Models;
+﻿using System;
+using System.Linq;
+using FanfictionResources.Models;
 using IdentityServer4.EntityFramework.Options;
 using Microsoft.AspNetCore.ApiAuthorization.IdentityServer;
 using Microsoft.EntityFrameworkCore;
@@ -19,6 +21,27 @@ namespace FanfictionResources.Data
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.Entity<FunCompositionsTags>().HasKey(sc => new { sc.TagsId, sc.FuncompositionsId });
+        }
+
+        public override int SaveChanges()
+        {
+            var entries = ChangeTracker
+                .Entries()
+                .Where(e => e.Entity is BaseEntity && (
+                    e.State == EntityState.Added
+                    || e.State == EntityState.Modified));
+
+            foreach (var entityEntry in entries)
+            {
+                ((BaseEntity)entityEntry.Entity).UpdatedDate = DateTime.Now;
+
+                if (entityEntry.State == EntityState.Added)
+                {
+                    ((BaseEntity)entityEntry.Entity).CreatedDate = DateTime.Now;
+                }
+            }
+
+            return base.SaveChanges();
         }
 
         public DbSet<FunСomposition> FunСompositions { get; set; }

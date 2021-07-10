@@ -4,14 +4,16 @@ using FanfictionResources.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace FanfictionResources.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210708131235_migr3")]
+    partial class migr3
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -127,9 +129,6 @@ namespace FanfictionResources.Migrations
                     b.Property<int?>("PreviousId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("SwapId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
                     b.HasIndex("FunСompositionId");
@@ -185,9 +184,6 @@ namespace FanfictionResources.Migrations
                     b.Property<string>("ApplicationUserId")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
-
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
@@ -199,9 +195,6 @@ namespace FanfictionResources.Migrations
 
                     b.Property<string>("PictureUrl")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("UpdatedDate")
-                        .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 

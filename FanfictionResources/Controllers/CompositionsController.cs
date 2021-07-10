@@ -14,21 +14,20 @@ using Microsoft.EntityFrameworkCore;
 namespace FanfictionResources.Controllers
 {
     [ApiController]
-    [Authorize]
-    public class CompositionController : ControllerBase
+    public class CompositionsController : ControllerBase
     {
         ApplicationDbContext context;
         UserManager<ApplicationUser> userManager;
 
-        public CompositionController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
+        public CompositionsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
             this.context = context;
             this.userManager = userManager;
         }
 
         [Route("[controller]")]
-        [HttpGet("composition/{id}")]
-        public async Task<IEnumerable<FunСomposition>> GetAsync(string id)
+        [HttpGet("compositions/{id}")]
+        public async Task<IEnumerable<FunСomposition>> GetAllAsync(string id)
         {
             var compositions = await context.FunСompositions
                 .Include(f=>f.Fandom)
@@ -38,6 +37,17 @@ namespace FanfictionResources.Controllers
             return compositions;
         }
 
+        [Route("[controller]/composition")]
+        [HttpGet("compositions/composition/{id}")]
+        public async Task<IEnumerable<FunСomposition>> GetByIdAsync(int id)
+        {
+            var compositions = await context.FunСompositions
+                .Where(x => x.Id == id)
+                .ToListAsync();
+            return compositions;
+        }
+
+        [Authorize]
         [Route("[controller]")]
         [HttpPost]
         public async Task<IActionResult> CreateAsync([FromBody] FunСomposition composition)
@@ -65,6 +75,7 @@ namespace FanfictionResources.Controllers
             return Ok();
         }
 
+        [Authorize]
         [Route("[controller]")]
         [HttpPut]
         public async Task<IActionResult> UpdateAsync([FromBody] FunСomposition composition)
@@ -98,10 +109,12 @@ namespace FanfictionResources.Controllers
             book.Description = composition.Description;
             book.Name = composition.Name;
             book.FandomId = composition.FandomId;
+            book.PictureUrl = composition.PictureUrl;
             await context.SaveChangesAsync();
             return Ok();
         }
 
+        [Authorize]
         [Route("[controller]")]
         [HttpDelete]
         public async Task<IActionResult> Delete([FromBody] string name)

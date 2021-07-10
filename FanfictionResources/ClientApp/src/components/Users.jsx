@@ -30,7 +30,7 @@ export function Users() {
 
     async function populateUserData() {
         const token = await authService.getAccessToken();
-        const response = await fetch('admin', {
+        const response = await fetch('users', {
             headers: !token ? {} : { 'Authorization': `Bearer ${token}` }
         });
         const data = await response.json();
@@ -40,7 +40,7 @@ export function Users() {
     async function deleteUserData(dataToDelete) {
         const token = await authService.getAccessToken();
         dataToDelete = JSON.stringify(dataToDelete);
-        const response = await fetch('admin', {
+        const response = await fetch('users', {
             method: 'DELETE',
             headers: !token ? {} : { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
             body: dataToDelete,
@@ -51,7 +51,7 @@ export function Users() {
     async function lockUserData(dataToLock) {
         const token = await authService.getAccessToken();
         dataToLock = JSON.stringify(dataToLock);
-        const response = await fetch('admin/lock', {
+        const response = await fetch('users/lock', {
             method: 'POST',
             headers: !token ? {} : { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
             body: dataToLock,
@@ -63,7 +63,7 @@ export function Users() {
     async function unlockUserData(dataToUnlock) {
         const token = await authService.getAccessToken();
         dataToUnlock = JSON.stringify(dataToUnlock);
-        const response = await fetch('admin/unlock', {
+        const response = await fetch('users/unlock', {
             method: 'POST',
             headers: !token ? {} : { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
             body: dataToUnlock,
@@ -75,7 +75,7 @@ export function Users() {
     async function setAdminRole(dataToAdmin) {
         const token = await authService.getAccessToken();
         dataToAdmin = JSON.stringify(dataToAdmin);
-        const response = await fetch('admin/set-admin-role', {
+        const response = await fetch('users/set-admin-role', {
             method: 'POST',
             headers: !token ? {} : { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
             body: dataToAdmin,
@@ -87,7 +87,7 @@ export function Users() {
     async function setUserRole(dataToUser) {
         const token = await authService.getAccessToken();
         dataToUser = JSON.stringify(dataToUser);
-        const response = await fetch('admin/set-user-role', {
+        const response = await fetch('users/set-user-role', {
             method: 'POST',
             headers: !token ? {} : { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
             body: dataToUser,
