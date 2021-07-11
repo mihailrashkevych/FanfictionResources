@@ -23,20 +23,20 @@ namespace FanfictionResources.Controllers
 
         [Route("[controller]/last-modified")]
         [HttpGet]
-        public async Task<IEnumerable<FunСomposition>> GetLastModifiedAsync()
+        public IEnumerable<FunСomposition> GetLastModifiedAsync()
         {
-            var compositions = context.FunСompositions.
-                OrderByDescending(d => d.UpdatedDate)
+            var compositions = context.FunСompositions
+                .OrderBy(d => d.UpdatedDate)
                 .Take(20);
             return compositions;
         }
 
         [Route("[controller]/last-created")]
         [HttpGet]
-        public async Task<IEnumerable<FunСomposition>> GetLastCreatedAsync()
+        public IEnumerable<FunСomposition> GetLastCreatedAsync()
         {
             var compositions = context.FunСompositions.
-                OrderByDescending(d => d.CreatedDate)
+                OrderBy(d => d.CreatedDate)
                 .Take(20);
             return compositions;
         }

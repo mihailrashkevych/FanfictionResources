@@ -149,7 +149,6 @@ export function ChaptersPage() {
     const onFormSubmit = e => {
         e.preventDefault()
         console.log(chapterBody)
-        setChapter({...chapter, body: chapterBody});
         if (isUpdate) {
             
             updateChapter(chapter);

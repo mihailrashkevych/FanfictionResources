@@ -36,7 +36,7 @@ namespace FanfictionResources.Controllers
 
         [Authorize]
         [Route("[controller]/{id}")]
-        [HttpGet("admin/{id}")]
+        [HttpGet("user/{id}")]
         public async Task<ApplicationUser> GetByIdAsync(string id)
         {
             var user = await userManager.Users.Where(x => x.Id == id).FirstOrDefaultAsync();
@@ -103,6 +103,24 @@ namespace FanfictionResources.Controllers
                 await userManager.RemoveFromRoleAsync(user, "Admin");
                 user.Role = Role.User;
             }
+            await context.SaveChangesAsync();
+            return IdentityResult.Success;
+        }
+
+        [Authorize]
+        [Route("[controller]")]
+        [HttpPut]
+        public async Task<IdentityResult> EditUser([FromBody] ApplicationUser user)
+        {
+            if (GetUserId() != user.Id && !this.User.IsInRole("Admin"))
+                return IdentityResult.Failed();
+            var userEntry = await userManager.Users.Where(u=>u.Id ==user.Id).FirstOrDefaultAsync();
+            userEntry.Name = user.Name;
+            userEntry.AboutSelf = user.AboutSelf;
+            userEntry.Birthday = user.Birthday;
+            userEntry.Photo = user.Photo;
+            userEntry.Pseudonym = user.Pseudonym;
+
             await context.SaveChangesAsync();
             return IdentityResult.Success;
         }

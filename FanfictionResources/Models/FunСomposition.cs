@@ -13,7 +13,9 @@ namespace FanfictionResources.Models
         public int Id { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
-        public string PictureUrl { get; set; }
+
+        public string PictureUrl { get; set; } =
+            "https://res.cloudinary.com/dynsyqrv3/image/upload/v1625948280/Initial%20pics/251-2518917_ui-system-apps-by-blackvariant-gallery-icon-png_lbsuyy.png";
         public int? FandomId { get; set; }
         public Fandom Fandom { get; set; }
         public string ApplicationUserId { get; set; }

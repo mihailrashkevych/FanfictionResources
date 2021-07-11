@@ -39,12 +39,12 @@ export function Compositions(props) {
 
   useEffect(() => {
     if (isUpdate) {
-      const compositionU = compositions.find(obj => {
+      const clickedComposition = compositions.find(obj => {
         return obj.name == compositionName;
       })
-      setComposition(compositionU);
+      setComposition(clickedComposition);
       const result = [];
-      compositionU.tags.forEach(tag => {
+      clickedComposition.tags.forEach(tag => {
         result.push(tag.name);
       });
       setCompositionTags(result);
@@ -271,7 +271,7 @@ export function Compositions(props) {
                 {
                   fandoms.map(fandom => {
                     return (
-                      <option key={fandom.id} value={fandom.id}>{fandom.name}</option>
+                      <option key={fandom.id} value={fandom.id} value={fandom.id}>{fandom.name}</option>
                     )
                   })
                 }

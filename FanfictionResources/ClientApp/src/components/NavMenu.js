@@ -27,6 +27,7 @@ export class NavMenu extends Component {
   componentWillUnmount() {
     authService.unsubscribe(this._subscription);
   }
+  
   async populateState() {
     const [isAuthenticated, user] = await Promise.all([authService.isAuthenticated(), authService.getUser()])
     this.setState({

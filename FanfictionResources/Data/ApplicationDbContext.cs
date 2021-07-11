@@ -21,6 +21,25 @@ namespace FanfictionResources.Data
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.Entity<FunCompositionsTags>().HasKey(sc => new { sc.TagsId, sc.FuncompositionsId });
+
+            modelBuilder.Entity<ApplicationUser>()
+                .Property(b => b.Photo)
+                .HasDefaultValue("https://res.cloudinary.com/dynsyqrv3/image/upload/v1625948280/Initial%20pics/251-2518917_ui-system-apps-by-blackvariant-gallery-icon-png_lbsuyy.png");
+            modelBuilder.Entity<ApplicationUser>()
+                .Property(b => b.Birthday)
+                .HasDefaultValue("...");
+            modelBuilder.Entity<ApplicationUser>()
+                .Property(b => b.Pseudonym)
+                .HasDefaultValue("...");
+            modelBuilder.Entity<ApplicationUser>()
+                .Property(b => b.AboutSelf)
+                .HasDefaultValue("...");
+            modelBuilder.Entity<FunСomposition>()
+                .Property(b => b.PictureUrl)
+                .HasDefaultValue("https://res.cloudinary.com/dynsyqrv3/image/upload/v1625948280/Initial%20pics/251-2518917_ui-system-apps-by-blackvariant-gallery-icon-png_lbsuyy.png");
+            modelBuilder.Entity<Chapter>()
+                .Property(b => b.PictureUrl)
+                .HasDefaultValue("https://res.cloudinary.com/dynsyqrv3/image/upload/v1625948280/Initial%20pics/251-2518917_ui-system-apps-by-blackvariant-gallery-icon-png_lbsuyy.png");
         }
 
         public override int SaveChanges()

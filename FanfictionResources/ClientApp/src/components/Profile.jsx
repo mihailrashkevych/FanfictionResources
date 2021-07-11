@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useLayoutEffect } from 'react';
+import React from 'react';
 import { Tabs, Tab } from 'react-bootstrap'
 import { Compositions } from './Compositions'
 import { UserData } from './UserData'

@@ -29,14 +29,11 @@ namespace FanfictionResources.Controllers
         public async Task<IEnumerable<Chapter>> GetByCompositionIdAsync(int id)
         {
             var composition = await context.FunСompositions.Where(c => c.Id == id).FirstOrDefaultAsync();
-            if (composition!=null && GetUserId() == composition.ApplicationUserId || this.User.IsInRole("Admin"))
-            {
+
                 var chapters = await context.Chapters
                     .Where(x => x.FunСompositionId == composition.Id)
                     .ToListAsync();
                 return chapters;
-            }
-            return null;
         }
 
         [Route("[controller]")]

@@ -39,12 +39,13 @@ namespace FanfictionResources.Controllers
 
         [Route("[controller]/composition")]
         [HttpGet("compositions/composition/{id}")]
-        public async Task<IEnumerable<FunСomposition>> GetByIdAsync(int id)
+        public async Task<FunСomposition> GetByIdAsync(int id)
         {
-            var compositions = await context.FunСompositions
+            var composition = await context.FunСompositions
+                .Include(c=>c.Tags)
                 .Where(x => x.Id == id)
-                .ToListAsync();
-            return compositions;
+                .FirstOrDefaultAsync();
+            return composition;
         }
 
         [Authorize]

@@ -11,7 +11,7 @@ namespace FanfictionResources.Models
         public string Name { get; set; }
         public string Pseudonym { get; set; }
         public string Photo { get; set; }
-        public DateTime Birthday { get; set; }
+        public string Birthday { get; set; }
         public string AboutSelf { get; set; }
         public Role Role { get; set; }
         public virtual ICollection<FunСomposition> FunСompositions { get; set; }
