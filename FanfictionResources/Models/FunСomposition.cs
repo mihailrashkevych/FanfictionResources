@@ -22,11 +22,14 @@ namespace FanfictionResources.Models
         public ApplicationUser ApplicationUser { get; set; }
         public virtual ICollection<Chapter> Chapters { get; set; }
         public virtual ICollection<Tag> Tags { get; set; }
+        public virtual ICollection<Bookmark> Bookmarks { get; set; }
+
 
         public FunСomposition()
         {
             Tags = new List<Tag>();
             Chapters = new List<Chapter>();
+            Bookmarks = new List<Bookmark>();
         }
     }
 }

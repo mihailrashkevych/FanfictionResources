@@ -110,6 +110,31 @@ namespace FanfictionResources.Migrations
                     b.ToTable("AspNetUsers");
                 });
 
+            modelBuilder.Entity("FanfictionResources.Models.Bookmark", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("ApplicationUserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("FunСompositionId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ApplicationUserId");
+
+                    b.HasIndex("FunСompositionId");
+
+                    b.ToTable("Bookmarks");
+                });
+
             modelBuilder.Entity("FanfictionResources.Models.Chapter", b =>
                 {
                     b.Property<int>("Id")
@@ -488,6 +513,23 @@ namespace FanfictionResources.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
+            modelBuilder.Entity("FanfictionResources.Models.Bookmark", b =>
+                {
+                    b.HasOne("FanfictionResources.Models.ApplicationUser", "ApplicationUser")
+                        .WithMany("Bookmarks")
+                        .HasForeignKey("ApplicationUserId");
+
+                    b.HasOne("FanfictionResources.Models.FunСomposition", "FunСomposition")
+                        .WithMany("Bookmarks")
+                        .HasForeignKey("FunСompositionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ApplicationUser");
+
+                    b.Navigation("FunСomposition");
+                });
+
             modelBuilder.Entity("FanfictionResources.Models.Chapter", b =>
                 {
                     b.HasOne("FanfictionResources.Models.FunСomposition", "FunСomposition")
@@ -597,6 +639,8 @@ namespace FanfictionResources.Migrations
 
             modelBuilder.Entity("FanfictionResources.Models.ApplicationUser", b =>
                 {
+                    b.Navigation("Bookmarks");
+
                     b.Navigation("FunСompositions");
                 });
 
@@ -607,6 +651,8 @@ namespace FanfictionResources.Migrations
 
             modelBuilder.Entity("FanfictionResources.Models.FunСomposition", b =>
                 {
+                    b.Navigation("Bookmarks");
+
                     b.Navigation("Chapters");
                 });
 #pragma warning restore 612, 618

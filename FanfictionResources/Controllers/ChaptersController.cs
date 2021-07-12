@@ -61,6 +61,10 @@ namespace FanfictionResources.Controllers
                 lastChapter.NextId = newEntry.Entity.Id;
             }
 
+            var composition = await context.FunСompositions.Where(x => x.Id == newEntry.Entity.FunСompositionId)
+                .FirstOrDefaultAsync();
+            composition.UpdatedDate = DateTime.Now;
+
             await context.SaveChangesAsync();
             return Ok();
         }
@@ -125,6 +129,10 @@ namespace FanfictionResources.Controllers
                 }
             }
 
+            var composition = await context.FunСompositions.Where(x => x.Id == chapter.FunСompositionId)
+                .FirstOrDefaultAsync();
+            composition.UpdatedDate = DateTime.Now;
+
             await context.SaveChangesAsync();
             return Ok();
         }
@@ -149,6 +157,7 @@ namespace FanfictionResources.Controllers
                 nextChapter.PreviousId = prevChapter?.Id ?? null;
 
             context.Remove(chapter);
+            composition.UpdatedDate = DateTime.Now;
             await context.SaveChangesAsync();
             return Ok();
         }

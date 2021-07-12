@@ -210,7 +210,7 @@ export function Read() {
         populateComposition();
     };
 
-    async function uploadPicture(uploadData) {
+    async function uploadCompositionPicture(uploadData) {
         const response = await fetch("https://api.cloudinary.com/v1_1/dynsyqrv3/image/upload", {
             method: "post",
             body: uploadData
@@ -219,12 +219,29 @@ export function Read() {
         setComposition({ ...composition, pictureUrl: data.secure_url })
     }
 
-    const handleUploadPicture = (files) => {
+    const handleUploadCompositionPicture = (files) => {
         const data = new FormData()
         data.append("file", files[0])
         data.append("upload_preset", "funFiction")
         data.append("cloud_name", "dynsyqrv3")
-        uploadPicture(data)
+        uploadCompositionPicture(data)
+    }
+
+    async function uploadChapterPicture(uploadData) {
+        const response = await fetch("https://api.cloudinary.com/v1_1/dynsyqrv3/image/upload", {
+            method: "post",
+            body: uploadData
+        });
+        const data = await response.json();
+        setChapter({ ...chapter, pictureUrl: data.secure_url })
+    }
+
+    const handleUploadChapterPicture = (files) => {
+        const data = new FormData()
+        data.append("file", files[0])
+        data.append("upload_preset", "funFiction")
+        data.append("cloud_name", "dynsyqrv3")
+        uploadChapterPicture(data)
     }
 
     const onFormChapterSubmit = e => {
@@ -264,7 +281,7 @@ export function Read() {
                             />
                             <Form.Label>Picture</Form.Label>
                             <FileDrop
-                                onDrop={(files, event) => { handleUploadPicture(files) }}
+                                onDrop={(files, event) => { handleUploadChapterPicture(files) }}
                             >
                                 Drop picture here!
                             </FileDrop>
@@ -336,7 +353,7 @@ export function Read() {
                         <Form.Group role="form">
                             <Form.Label>Picture</Form.Label>
                             <FileDrop
-                                onDrop={(files, event) => { handleUploadPicture(files) }}
+                                onDrop={(files, event) => { handleUploadCompositionPicture(files) }}
                             >
                                 Drop picture here!
                             </FileDrop>
@@ -356,7 +373,7 @@ export function Read() {
 
             <Container style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '150px' }}>
                 <Image style={{ height: '100%', width: 'auto', margin: '3px' }} src={composition.pictureUrl} rounded />
-                <h1 style={{ textAlign: 'center' }}>{composition.name}</h1>
+                <h4 style={{ textAlign: 'center' }}>{composition.name}</h4>
             </Container>
             <Tab.Container id="left-tabs-example" defaultActiveKey="first">
                 <Row>

@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FanfictionResources.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20210706145035_migr")]
+    [Migration("20210712124716_migr")]
     partial class migr
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -26,8 +26,18 @@ namespace FanfictionResources.Migrations
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<string>("AboutSelf")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("nvarchar(max)")
+                        .HasDefaultValue("...");
+
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
+
+                    b.Property<string>("Birthday")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("nvarchar(max)")
+                        .HasDefaultValue("...");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
@@ -66,6 +76,16 @@ namespace FanfictionResources.Migrations
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("bit");
 
+                    b.Property<string>("Photo")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("nvarchar(max)")
+                        .HasDefaultValue("https://res.cloudinary.com/dynsyqrv3/image/upload/v1625948280/Initial%20pics/251-2518917_ui-system-apps-by-blackvariant-gallery-icon-png_lbsuyy.png");
+
+                    b.Property<string>("Pseudonym")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("nvarchar(max)")
+                        .HasDefaultValue("...");
+
                     b.Property<int>("Role")
                         .HasColumnType("int");
 
@@ -92,6 +112,31 @@ namespace FanfictionResources.Migrations
                     b.ToTable("AspNetUsers");
                 });
 
+            modelBuilder.Entity("FanfictionResources.Models.Bookmark", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("ApplicationUserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("FunСompositionId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ApplicationUserId");
+
+                    b.HasIndex("FunСompositionId");
+
+                    b.ToTable("Bookmarks");
+                });
+
             modelBuilder.Entity("FanfictionResources.Models.Chapter", b =>
                 {
                     b.Property<int>("Id")
@@ -108,13 +153,18 @@ namespace FanfictionResources.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("NextId")
+                    b.Property<int?>("NextId")
                         .HasColumnType("int");
 
-                    b.Property<string>("Pic")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<string>("PictureUrl")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("nvarchar(max)")
+                        .HasDefaultValue("https://res.cloudinary.com/dynsyqrv3/image/upload/v1625948280/Initial%20pics/251-2518917_ui-system-apps-by-blackvariant-gallery-icon-png_lbsuyy.png");
 
-                    b.Property<int>("PreviousId")
+                    b.Property<int?>("PreviousId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("SwapId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -172,6 +222,9 @@ namespace FanfictionResources.Migrations
                     b.Property<string>("ApplicationUserId")
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
@@ -180,6 +233,14 @@ namespace FanfictionResources.Migrations
 
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PictureUrl")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("nvarchar(max)")
+                        .HasDefaultValue("https://res.cloudinary.com/dynsyqrv3/image/upload/v1625948280/Initial%20pics/251-2518917_ui-system-apps-by-blackvariant-gallery-icon-png_lbsuyy.png");
+
+                    b.Property<DateTime>("UpdatedDate")
+                        .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
@@ -454,6 +515,23 @@ namespace FanfictionResources.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
+            modelBuilder.Entity("FanfictionResources.Models.Bookmark", b =>
+                {
+                    b.HasOne("FanfictionResources.Models.ApplicationUser", "ApplicationUser")
+                        .WithMany("Bookmarks")
+                        .HasForeignKey("ApplicationUserId");
+
+                    b.HasOne("FanfictionResources.Models.FunСomposition", "FunСomposition")
+                        .WithMany("Bookmarks")
+                        .HasForeignKey("FunСompositionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ApplicationUser");
+
+                    b.Navigation("FunСomposition");
+                });
+
             modelBuilder.Entity("FanfictionResources.Models.Chapter", b =>
                 {
                     b.HasOne("FanfictionResources.Models.FunСomposition", "FunСomposition")
@@ -563,6 +641,8 @@ namespace FanfictionResources.Migrations
 
             modelBuilder.Entity("FanfictionResources.Models.ApplicationUser", b =>
                 {
+                    b.Navigation("Bookmarks");
+
                     b.Navigation("FunСompositions");
                 });
 
@@ -573,6 +653,8 @@ namespace FanfictionResources.Migrations
 
             modelBuilder.Entity("FanfictionResources.Models.FunСomposition", b =>
                 {
+                    b.Navigation("Bookmarks");
+
                     b.Navigation("Chapters");
                 });
 #pragma warning restore 612, 618

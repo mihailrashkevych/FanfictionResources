@@ -14,11 +14,13 @@ namespace FanfictionResources.Models
         public string Birthday { get; set; }
         public string AboutSelf { get; set; }
         public Role Role { get; set; }
+        public virtual ICollection<Bookmark> Bookmarks { get; set; }
         public virtual ICollection<FunСomposition> FunСompositions { get; set; }
 
         public ApplicationUser()
         {
             FunСompositions = new List<FunСomposition>();
+            Bookmarks = new List<Bookmark>();
         }
     }
 

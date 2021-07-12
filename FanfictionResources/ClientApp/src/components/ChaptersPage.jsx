@@ -38,7 +38,7 @@ export function ChaptersPage() {
     useEffect(() => { populateChapters() }, []);
 
     useEffect(() => {
-        if (isUpdate) {
+        if (isUpdate&&(chapter.chapterNumber - 1)<=chapters.length) {
             setChapter({ ...chapter, swapId: chapters[chapter.chapterNumber - 1].id });
         }
     }, [chapter.chapterNumber, chapterBody]);
@@ -130,6 +130,7 @@ export function ChaptersPage() {
         setShow(false)
         setIsUpdate(false)
         setChapter(initialChapterState);
+        setChapterBody('');
     };
 
     const handleShow = e => {
@@ -202,6 +203,7 @@ export function ChaptersPage() {
                                     <Form.Control
                                         defaultValue={chapter.chapterNumber}
                                         type='number'
+                                        min='1' max={chapters.length}
                                         onChange={onInput}
                                         name='chapterNumber'
                                     />
@@ -213,6 +215,7 @@ export function ChaptersPage() {
                                 type='text'
                                 onChange={onInput}
                                 name='name'
+                                required
                             />
                             <Form.Label>Picture</Form.Label>
                             <FileDrop
@@ -220,8 +223,8 @@ export function ChaptersPage() {
                             >
                                 Drop picture here!
                             </FileDrop>
-                            <div style={{display: 'flex',  justifyContent:'center', alignItems:'center', height: 'auto'}}>
-                                <img style={{ height:'100%', width:'100%' }} src={chapter.pictureUrl} />
+                            <div style={{ width: 200 }}>
+                                <img style={{ width: "100%", margin: "30px 0" }} src={chapter.pictureUrl} />
                             </div>
                         </Form.Group>
                         <Form.Group role='form'>

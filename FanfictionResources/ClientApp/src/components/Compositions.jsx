@@ -8,6 +8,7 @@ import { AutocompleteTags } from './AutocompleteTags'
 import { TagRender } from './TagRender'
 import { FileDrop } from 'react-file-drop';
 import './Drop.css';
+import { UncontrolledAlert } from 'reactstrap';
 
 export function Compositions(props) {
   const [compositions, setCompositions] = useState([]);
@@ -24,7 +25,7 @@ export function Compositions(props) {
     {
       id:'',
       name: '',
-      pictureUrl: '',
+      pictureUrl: undefined,
       applicationUserId: '',
       fandomId: 0,
       tags: [],
@@ -32,9 +33,9 @@ export function Compositions(props) {
     });
 
   useEffect(() => {
+    populateTags();
     populateCompositions();
     populateFandomData();
-    populateTags();
   }, []);
 
   useEffect(() => {
@@ -93,7 +94,7 @@ export function Compositions(props) {
     });
     const data = await response.json();
     setFandoms(data);
-    setComposition({ fandomId: data[0].id })
+    if(data.length>0) setComposition({ fandomId: data[0].id })
   };
 
   const handleUpdateHeaders = (e) => {
@@ -161,7 +162,6 @@ export function Compositions(props) {
     setShow(false);
     setCompositionTags([]);
     setComposition({});
-    setTags([]);
   }
 
   async function createComposition(dateToCreate) {
@@ -216,6 +216,7 @@ export function Compositions(props) {
       body: uploadData
     });
     const data = await response.json();
+    console.log(data)
     setComposition({...composition, pictureUrl: data.secure_url })
   }
 

@@ -66,11 +66,18 @@ export class NavMenu extends Component {
                     : null}
                 {
                    isAuthenticated ?
+                   <>
                     <span>
                       <NavItem>
-                        <NavLink tag={Link} className="text-dark" to="/profile">Profile</NavLink>
+                        <NavLink tag={Link} className="text-dark" to="/profile">Library</NavLink>
+                      </NavItem>
+                      </span>
+                      <span>
+                      <NavItem>
+                        <NavLink tag={Link} className="text-dark" to="/bookmarks">Bookmarks</NavLink>
                       </NavItem>
                     </span>
+                    </>
                     : null}
                 <LoginMenu>
                 </LoginMenu>

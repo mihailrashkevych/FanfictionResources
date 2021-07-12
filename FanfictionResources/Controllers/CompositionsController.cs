@@ -71,7 +71,44 @@ namespace FanfictionResources.Controllers
             }
 
             composition.Tags = tags;
+            composition.UpdatedDate = DateTime.Now;
             await context.FunСompositions.AddAsync(composition);
+            await context.SaveChangesAsync();
+            return Ok();
+        }
+
+        [Route("[controller]/bookmarks")]
+        [HttpGet("compositions/bookmarks/{id}")]
+        public async Task<IEnumerable<Bookmark>> GetBookmarksAsync(string id)
+        {
+            var bookmarks = await context.Bookmarks.Include(b=>b.FunСomposition).Where(x => x.UserId == id).ToListAsync();
+            return bookmarks;
+        }
+
+ 
+        [Route("[controller]/bookmarks")]
+        [HttpPost]
+        public async Task<IActionResult> CreateBookmarksAsync([FromBody] FunСomposition composition)
+        {
+            var bookMark = new Bookmark
+            {
+                UserId = GetUserId(),
+                FunСompositionId = composition.Id,
+            };
+
+            context.Bookmarks.Add(bookMark);
+
+            await context.SaveChangesAsync();
+            return Ok();
+        }
+
+        [Authorize]
+        [Route("[controller]/bookmarks")]
+        [HttpDelete]
+        public async Task<IActionResult> DeleteBookmarksAsync([FromBody] int id)
+        {
+            var bookMark = await context.Bookmarks.Where(b => b.UserId == GetUserId() && b.FunСompositionId == id).FirstOrDefaultAsync();
+            context.Bookmarks.Remove(bookMark);
             await context.SaveChangesAsync();
             return Ok();
         }
@@ -129,6 +166,15 @@ namespace FanfictionResources.Controllers
             }
 
             return BadRequest("Access denied: Wrong Id");
+        }
+
+        [Route("[controller]/search")]
+        [HttpGet("compositions/search/{term}")]
+        public IEnumerable<FunСomposition> Search(string term)
+        {
+            var compositions = context.FunСompositions
+                .Where(f => EF.Functions.FreeText(f.Name, term));
+            return compositions;
         }
 
         protected string GetUserId()

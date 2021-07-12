@@ -67,6 +67,7 @@ namespace FanfictionResources.Data
         public DbSet<Chapter> Chapters { get; set; }
         public DbSet<Tag> Tags { get; set; }
         public DbSet<Fandom> Fandoms { get; set; }
+        public DbSet<Bookmark> Bookmarks { get; set; }
         public DbSet<FunCompositionsTags> FunCompositionsTags { get; set; }
 
     }

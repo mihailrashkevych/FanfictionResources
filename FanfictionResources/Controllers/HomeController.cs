@@ -26,8 +26,8 @@ namespace FanfictionResources.Controllers
         public IEnumerable<FunСomposition> GetLastModifiedAsync()
         {
             var compositions = context.FunСompositions
-                .OrderBy(d => d.UpdatedDate)
-                .Take(20);
+                .OrderByDescending(d => d.UpdatedDate)
+                .Take(10);
             return compositions;
         }
 
@@ -36,8 +36,8 @@ namespace FanfictionResources.Controllers
         public IEnumerable<FunСomposition> GetLastCreatedAsync()
         {
             var compositions = context.FunСompositions.
-                OrderBy(d => d.CreatedDate)
-                .Take(20);
+                OrderByDescending(d => d.CreatedDate)
+                .Take(10);
             return compositions;
         }
     }

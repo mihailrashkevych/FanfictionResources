@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Card, CardDeck, Container } from 'react-bootstrap';
 import { Redirect } from 'react-router-dom';
+import authService from './api-authorization/AuthorizeService';
 
 export function Home () {
   
@@ -36,6 +37,21 @@ export function Home () {
     setIsRead(true);
   }
 
+  const handleAddBookMark = (e) => {
+    const composition = lastModified.find(x=>{return x.id == e.target.value})
+    AddBookMark(composition)
+  }
+
+  async function AddBookMark(composition) {
+    const token = await authService.getAccessToken();
+    composition = JSON.stringify(composition);
+    const response = await fetch('compositions/bookmarks/', {
+      method: 'POST',
+      headers: !token ? {} : { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
+      body: composition,
+    });
+  };
+
   if (isRead) {
     return <Redirect to={{ pathname: '/read'}} />
    }
@@ -57,7 +73,10 @@ export function Home () {
                   </Card.Text>
                 </Card.Body>
                 <Card.Footer>
-                  <Container><Button variant='secondary' value = {composition.id} onClick={handleRead}>Read</Button></Container>
+                  <Container>
+                    <Button variant='secondary' value = {composition.id} onClick={handleRead}>Read</Button>
+                    <Button variant='secondary' value = {composition.id} onClick={handleAddBookMark}>Bookmark</Button>
+                  </Container>
                 </Card.Footer>
               </Card>
             );
