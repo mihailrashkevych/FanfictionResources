@@ -1,9 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
-using System;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace FanfictionResources.Data.Migrations
+namespace FanfictionResources.Migrations
 {
-    public partial class CreateIdentitySchema : Migration
+    public partial class migr : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -26,6 +26,12 @@ namespace FanfictionResources.Data.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Pseudonym = table.Column<string>(type: "nvarchar(max)", nullable: true, defaultValue: "..."),
+                    Photo = table.Column<string>(type: "nvarchar(max)", nullable: true, defaultValue: "https://res.cloudinary.com/dynsyqrv3/image/upload/v1625948280/Initial%20pics/251-2518917_ui-system-apps-by-blackvariant-gallery-icon-png_lbsuyy.png"),
+                    Birthday = table.Column<string>(type: "nvarchar(max)", nullable: true, defaultValue: "..."),
+                    AboutSelf = table.Column<string>(type: "nvarchar(max)", nullable: true, defaultValue: "..."),
+                    Role = table.Column<int>(type: "int", nullable: false),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -66,6 +72,19 @@ namespace FanfictionResources.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Fandoms",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Fandoms", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "PersistedGrants",
                 columns: table => new
                 {
@@ -83,6 +102,19 @@ namespace FanfictionResources.Data.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_PersistedGrants", x => x.Key);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Tags",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Tags", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -131,8 +163,8 @@ namespace FanfictionResources.Data.Migrations
                 name: "AspNetUserLogins",
                 columns: table => new
                 {
-                    LoginProvider = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false),
-                    ProviderKey = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false),
+                    LoginProvider = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    ProviderKey = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     ProviderDisplayName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     UserId = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
@@ -176,8 +208,8 @@ namespace FanfictionResources.Data.Migrations
                 columns: table => new
                 {
                     UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    LoginProvider = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false),
+                    LoginProvider = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Value = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
@@ -187,6 +219,139 @@ namespace FanfictionResources.Data.Migrations
                         name: "FK_AspNetUserTokens_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "FunСompositions",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PictureUrl = table.Column<string>(type: "nvarchar(max)", nullable: true, defaultValue: "https://res.cloudinary.com/dynsyqrv3/image/upload/v1625948280/Initial%20pics/251-2518917_ui-system-apps-by-blackvariant-gallery-icon-png_lbsuyy.png"),
+                    FandomId = table.Column<int>(type: "int", nullable: true),
+                    ApplicationUserId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedDate = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_FunСompositions", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_FunСompositions_AspNetUsers_ApplicationUserId",
+                        column: x => x.ApplicationUserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_FunСompositions_Fandoms_FandomId",
+                        column: x => x.FandomId,
+                        principalTable: "Fandoms",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Bookmarks",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UserId = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ApplicationUserId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    FunСompositionId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Bookmarks", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Bookmarks_AspNetUsers_ApplicationUserId",
+                        column: x => x.ApplicationUserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Bookmarks_FunСompositions_FunСompositionId",
+                        column: x => x.FunСompositionId,
+                        principalTable: "FunСompositions",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Chapters",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PictureUrl = table.Column<string>(type: "nvarchar(max)", nullable: true, defaultValue: "https://res.cloudinary.com/dynsyqrv3/image/upload/v1625948280/Initial%20pics/251-2518917_ui-system-apps-by-blackvariant-gallery-icon-png_lbsuyy.png"),
+                    Body = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    NextId = table.Column<int>(type: "int", nullable: true),
+                    PreviousId = table.Column<int>(type: "int", nullable: true),
+                    SwapId = table.Column<int>(type: "int", nullable: true),
+                    FunСompositionId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Chapters", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Chapters_FunСompositions_FunСompositionId",
+                        column: x => x.FunСompositionId,
+                        principalTable: "FunСompositions",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "FunCompositionsTags",
+                columns: table => new
+                {
+                    FuncompositionsId = table.Column<int>(type: "int", nullable: false),
+                    TagsId = table.Column<int>(type: "int", nullable: false),
+                    FunСompositionId = table.Column<int>(type: "int", nullable: true),
+                    TagId = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_FunCompositionsTags", x => new { x.TagsId, x.FuncompositionsId });
+                    table.ForeignKey(
+                        name: "FK_FunCompositionsTags_FunСompositions_FunСompositionId",
+                        column: x => x.FunСompositionId,
+                        principalTable: "FunСompositions",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_FunCompositionsTags_Tags_TagId",
+                        column: x => x.TagId,
+                        principalTable: "Tags",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "FunСompositionTag",
+                columns: table => new
+                {
+                    FunСompositionsId = table.Column<int>(type: "int", nullable: false),
+                    TagsId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_FunСompositionTag", x => new { x.FunСompositionsId, x.TagsId });
+                    table.ForeignKey(
+                        name: "FK_FunСompositionTag_FunСompositions_FunСompositionsId",
+                        column: x => x.FunСompositionsId,
+                        principalTable: "FunСompositions",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_FunСompositionTag_Tags_TagsId",
+                        column: x => x.TagsId,
+                        principalTable: "Tags",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -231,6 +396,21 @@ namespace FanfictionResources.Data.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Bookmarks_ApplicationUserId",
+                table: "Bookmarks",
+                column: "ApplicationUserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Bookmarks_FunСompositionId",
+                table: "Bookmarks",
+                column: "FunСompositionId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Chapters_FunСompositionId",
+                table: "Chapters",
+                column: "FunСompositionId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_DeviceCodes_DeviceCode",
                 table: "DeviceCodes",
                 column: "DeviceCode",
@@ -240,6 +420,31 @@ namespace FanfictionResources.Data.Migrations
                 name: "IX_DeviceCodes_Expiration",
                 table: "DeviceCodes",
                 column: "Expiration");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_FunCompositionsTags_FunСompositionId",
+                table: "FunCompositionsTags",
+                column: "FunСompositionId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_FunCompositionsTags_TagId",
+                table: "FunCompositionsTags",
+                column: "TagId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_FunСompositions_ApplicationUserId",
+                table: "FunСompositions",
+                column: "ApplicationUserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_FunСompositions_FandomId",
+                table: "FunСompositions",
+                column: "FandomId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_FunСompositionTag_TagsId",
+                table: "FunСompositionTag",
+                column: "TagsId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_PersistedGrants_Expiration",
@@ -275,7 +480,19 @@ namespace FanfictionResources.Data.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
+                name: "Bookmarks");
+
+            migrationBuilder.DropTable(
+                name: "Chapters");
+
+            migrationBuilder.DropTable(
                 name: "DeviceCodes");
+
+            migrationBuilder.DropTable(
+                name: "FunCompositionsTags");
+
+            migrationBuilder.DropTable(
+                name: "FunСompositionTag");
 
             migrationBuilder.DropTable(
                 name: "PersistedGrants");
@@ -284,7 +501,16 @@ namespace FanfictionResources.Data.Migrations
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
+                name: "FunСompositions");
+
+            migrationBuilder.DropTable(
+                name: "Tags");
+
+            migrationBuilder.DropTable(
                 name: "AspNetUsers");
+
+            migrationBuilder.DropTable(
+                name: "Fandoms");
         }
     }
 }
